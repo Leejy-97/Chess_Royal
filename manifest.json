@@ -1,0 +1,30 @@
+{
+  "id": "chess-royale",
+  "name": "Chess Royale",
+  "short_name": "ChessRoyale",
+  "description": "체스 기반 4인 배틀로얄. 조커 제자리 광역 공격, 동시 실행 턴, 난이도 선택 지원.",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e3c72",
+  "theme_color": "#1e3c72",
+  "categories": ["games", "entertainment", "strategy"],
+  "icons": [
+    {
+      "src": "icons/icon-pixel-light-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-pixel-light-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "prefer_related_applications": false
+}
