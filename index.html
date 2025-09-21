@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Chess Royale – 풀버전 (PWA)</title>
 
-<!-- PWA & 모바일 전체화면 -->
+<!-- PWA & 모바일 -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1e3c72">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-pixel-light-192.png">
 
 <style>
   *{box-sizing:border-box}
@@ -136,7 +135,7 @@
       <button class="btn" onclick="showScreen('difficultyScreen')">게임 시작</button>
       <button class="btn gray" onclick="showScreen('settingsScreen')">설정</button>
       <button class="btn warn" onclick="showScreen('helpScreen')">게임 설명</button>
-      <!-- PWA 설치 버튼(안드로이드에서 beforeinstallprompt가 올 때만 표시) -->
+      <!-- PWA 설치 버튼 -->
       <button class="btn" id="installBtn" style="display:none">설치</button>
     </div>
   </div>
@@ -253,7 +252,7 @@
     document.getElementById('overlayToMenu').onclick = ()=>{ overlay.remove(); showScreen('startScreen'); };
   }
 
-  /* 게임 본체 (이전 풀버전 로직 유지) */
+  /* 게임 본체 */
   class ChessRoyale{
     constructor(difficulty='middle'){
       this.difficulty = difficulty;
@@ -530,6 +529,7 @@
 
       const others = this.getAlivePlayers().filter(p=>p.id!==aiPlayer.id);
 
+      // 조커 우선 (같은 칸에 적이 있으면 즉시 사용)
       if(deck.includes('🃏') && !aiPlayer.jokerUsed){
         const same = others.filter(p=>p.position.x===aiPlayer.position.x && p.position.y===aiPlayer.position.y);
         if(same.length>0){
@@ -926,7 +926,9 @@
   /* --- PWA: 서비스워커 등록 & 설치 버튼 --- */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(console.error);
+      // ✅ GitHub Pages 하위 경로 대응: 반드시 상대경로 사용
+      navigator.serviceWorker.register('./sw.js')
+        .catch(console.error);
     });
   }
   let deferredPrompt;
@@ -947,6 +949,7 @@
   }
   window.addEventListener('appinstalled', () => {
     console.log('PWA installed');
+    if(installBtn) installBtn.style.display = 'none';
   });
 </script>
 </body>
