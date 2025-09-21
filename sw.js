@@ -1,10 +1,12 @@
-const CACHE = 'cr-cache-v1';
+// GitHub Pages용 서비스워커 (상대경로 캐싱)
+// 캐시 버전은 업데이트 때마다 숫자만 올리면 됩니다.
+const CACHE = 'cr-cache-v4';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-pixel-light-192.png',
+  './icons/icon-pixel-light-512.png'
 ];
 
 self.addEventListener('install', (e) => {
@@ -21,24 +23,24 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// 네비게이션은 네트워크 우선 → 실패 시 캐시된 index로
 self.addEventListener('fetch', (e) => {
-  const { request } = e;
-  // HTML은 네트워크 우선 → 오프라인 시 캐시
-  if (request.mode === 'navigate') {
+  const req = e.request;
+  if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(request).then((r) => {
-        const copy = r.clone();
-        caches.open(CACHE).then((c) => c.put(request, copy));
-        return r;
+      fetch(req).then((resp) => {
+        const copy = resp.clone();
+        caches.open(CACHE).then((c) => c.put(req, copy));
+        return resp;
       }).catch(() => caches.match('./index.html'))
     );
     return;
   }
   // 그 외는 캐시 우선 → 없으면 네트워크
   e.respondWith(
-    caches.match(request).then((r) => r || fetch(request).then((resp) => {
+    caches.match(req).then((r) => r || fetch(req).then((resp) => {
       const copy = resp.clone();
-      caches.open(CACHE).then((c) => c.put(request, copy));
+      caches.open(CACHE).then((c) => c.put(req, copy));
       return resp;
     }))
   );
